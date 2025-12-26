@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Личный кабинет</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        nav a { margin-right: 15px; }
+        .flash { color: green; font-weight: bold; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <nav>
+        {% if session.get('user') %}
+            {% if session.get('role') == 'student' %}
+                <a href="{{ url_for('student_dashboard') }}">Главная (Студент)</a>
+                <a href="{{ url_for('view_schedule') }}">Посмотреть расписание</a>
+                <a href="{{ url_for('view_grades') }}">Посмотреть оценки</a>
+                <a href="{{ url_for('upload_assignment_student') }}">Загрузить задание</a>
+                <a href="{{ url_for('edit_profile_student') }}">Редактировать профиль</a>
+            {% elif session.get('role') == 'teacher' %}
+                <a href="{{ url_for('teacher_dashboard') }}">Главная (Преподаватель)</a>
+                <a href="{{ url_for('view_schedule_teacher') }}">Посмотреть расписание</a>
+                <a href="{{ url_for('grade_student') }}">Выставить оценки</a>
+                <a href="{{ url_for('publish_assignment') }}">Опубликовать задание</a>
+                <a href="{{ url_for('students_list') }}">Посмотреть список студентов</a>
+            {% endif %}
+            <a href="{{ url_for('logout') }}" style="float: right;">Выйти ({{ session['user'] }})</a>
+        {% endif %}
+    </nav>
+    <hr>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="flash">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+</body>
+</html>
